@@ -7,6 +7,7 @@ namespace Ecommerce.WebAPI.Queries.Produtos
 {
     public interface IProdutosQuery
     {
-        Task<PagedList<ProdutoViewModel>> ListarProdutosAsync(ProdutoParameters parameters);
+        Task<PagedList<ListarProdutoViewModel>> ListarProdutosAsync(ProdutoParameters parameters);
+        Task<ProdutoViewModel> BuscarProdutosAsync(int produtoId);
     }
 }

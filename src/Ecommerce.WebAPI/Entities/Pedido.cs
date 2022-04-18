@@ -36,5 +36,16 @@ namespace Ecommerce.WebAPI.Entities
                 _itens.Add(item);
             }).Finally(resultado => resultado);
         }
+
+        public Result RemoverItem(int produtoId)
+        {
+            Result validacoes = Result.Combine(
+                Result.FailureIf(!_itens.Any(x => x.ProdutoId == produtoId), $"Produto Id: {produtoId} não existe.")
+                );
+
+            return validacoes.Tap(() => {
+                _itens.Remove(_itens.Where(x => x.ProdutoId == produtoId).FirstOrDefault());
+            }).Finally(resultado => resultado);
+        }
     }
 }

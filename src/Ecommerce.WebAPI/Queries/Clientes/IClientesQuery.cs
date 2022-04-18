@@ -7,6 +7,7 @@ namespace Ecommerce.WebAPI.Queries.Clientes
 {
     public interface IClientesQuery
     {
-        Task<PagedList<ClienteViewModel>> ListarClientesAsync(ClienteParameters parameters);
+        Task<PagedList<ListarClienteViewModel>> ListarClientesAsync(ClienteParameters parameters);
+        Task<ClienteViewModel> BuscarClienteAsync(int clienteId);
     }
 }

@@ -26,5 +26,17 @@ namespace Ecommerce.WebAPI.Entities
                 new ItemDoPedido(quantidade, produtoId),
                 validacoes.IsFailure ? validacoes.Error : string.Empty);
         }
+
+        public Result Atualizar(int quantidade)
+        {
+            Result validacoes = Result.Combine(
+                Result.FailureIf(quantidade <= 0, "Quantidade é obrigatória")
+                );
+
+            return validacoes.Tap(() =>
+            {
+                Quantidade = quantidade;
+            }).Finally(result => result);
+        }
     }
 }

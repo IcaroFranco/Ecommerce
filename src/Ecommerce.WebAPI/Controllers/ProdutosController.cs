@@ -30,11 +30,22 @@ namespace Ecommerce.WebAPI.Controllers
         [HttpHead]
         public async Task<IActionResult> Listar([FromQuery] ProdutoParameters parameters)
         {
-            PagedList<ProdutoViewModel> pagedList = await _produtosQuery.ListarProdutosAsync(parameters);
+            PagedList<ListarProdutoViewModel> pagedList = await _produtosQuery.ListarProdutosAsync(parameters);
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(pagedList.MetaData));
 
             return Ok(pagedList.Data);
+        }
+
+        [HttpGet("produtoId")]
+        public async Task<IActionResult> BuscarAsync(int produtoId)
+        {
+            ProdutoViewModel dto = await _produtosQuery.BuscarProdutosAsync(produtoId);
+
+            if (dto == null)
+                return BadRequest($"Produto Id: {produtoId} não existe.");
+
+            return Ok(dto);
         }
 
         [HttpPost]
@@ -51,7 +62,7 @@ namespace Ecommerce.WebAPI.Controllers
             return Ok($"Produto '{produto.Value.Nome}', Id: {produto.Value.Id} criado com sucesso."); ;
         }
 
-        [HttpPut("ProdutoId")]
+        [HttpPut("produtoId")]
         public IActionResult Editar(int produtoId, AtualizarProdutoInputModel input)
         {
             Produto produto = _context.Produtos.Where(x => x.Id == produtoId).FirstOrDefault();
@@ -69,7 +80,7 @@ namespace Ecommerce.WebAPI.Controllers
             return Ok($"Produto {produto.Nome}, Id: {produto.Id} editado com sucesso."); ;
         }
 
-        [HttpDelete("ProdutoId")]
+        [HttpDelete("produtoId")]
         public IActionResult Excluir(int produtoId)
         {
             Produto produto = _context.Produtos.Where(x => x.Id == produtoId).FirstOrDefault();

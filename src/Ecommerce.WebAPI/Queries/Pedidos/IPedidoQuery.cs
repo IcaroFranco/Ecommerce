@@ -7,6 +7,7 @@ namespace Ecommerce.WebAPI.Queries.Pedidos
 {
     public interface IPedidoQuery
     {
-        Task<PagedList<PedidoViewModel>> ListarPedidosAsync(PedidoParameters parameters);
+        Task<PagedList<ListarPedidoViewModel>> ListarPedidosAsync(PedidoParameters parameters);
+        Task<PedidoViewModel> BuscarPedidosAsync(int pedidoId);
     }
 }

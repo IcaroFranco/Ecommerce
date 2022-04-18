@@ -30,7 +30,7 @@ namespace Ecommerce.WebAPI.Controllers
         [HttpHead]
         public async Task<IActionResult> Listar([FromQuery] ClienteParameters parameters)
         {
-            PagedList<ClienteViewModel> pagedList = await _clientesQuery.ListarClientesAsync(parameters);
+            PagedList<ListarClienteViewModel> pagedList = await _clientesQuery.ListarClientesAsync(parameters);
 
             Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(pagedList.MetaData));
 
@@ -45,6 +45,16 @@ namespace Ecommerce.WebAPI.Controllers
            
         //     return NoContent();
         // }
+        [HttpGet("clienteId")]
+        public async Task<IActionResult> BuscarAsync(int id)
+        {
+            ClienteViewModel dto = await _clientesQuery.BuscarClienteAsync(id);
+
+            if (dto == null)
+                return BadRequest($"Cliente Id: {id} não existe.");
+
+            return Ok(dto);
+        }
 
         [HttpPost]
         public IActionResult Criar([FromBody]InserirClienteInputModel input)
