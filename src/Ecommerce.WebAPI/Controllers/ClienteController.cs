@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
+using Ecommerce.WebAPI._Core.Shared;
 
 namespace Ecommerce.WebAPI.Controllers
 {
@@ -37,21 +38,13 @@ namespace Ecommerce.WebAPI.Controllers
             return Ok(pagedList.Data);
         }
 
-        // TO DO: Ver com o ALM
-        // [HttpHead]
-        // public IActionResult Head()
-        // {
-        //     Response.Headers.Add("X-TotalDeRegistros", JsonConvert.SerializeObject(_context.Clientes.Count()));
-           
-        //     return NoContent();
-        // }
         [HttpGet("clienteId")]
         public async Task<IActionResult> BuscarAsync(int id)
         {
             ClienteViewModel dto = await _clientesQuery.BuscarClienteAsync(id);
 
             if (dto == null)
-                return BadRequest($"Cliente Id: {id} não existe.");
+                return NotFound();
 
             return Ok(dto);
         }
@@ -59,15 +52,15 @@ namespace Ecommerce.WebAPI.Controllers
         [HttpPost]
         public IActionResult Criar([FromBody]InserirClienteInputModel input)
         {
-            Result<Cliente> cliente = Cliente.Criar(input.Nome);
+            Result<Cliente> cliente = Cliente.Criar(input.Nome, input.Sobrenome, input.Email);
 
             if (cliente.IsFailure)
-                return BadRequest($"Erro ao inserir Cliente, {cliente.Error}");
+                return BadRequest();
 
             _context.Clientes.Add(cliente.Value);
             _context.SaveChanges();
 
-            return Ok($"Cliente {cliente.Value.Nome}, Id: {cliente.Value.Id} criado com sucesso.");
+            return Ok(cliente.Value);
         }
 
         [HttpPut("clienteId")]
@@ -76,16 +69,16 @@ namespace Ecommerce.WebAPI.Controllers
             Cliente cliente = _context.Clientes.Where(x => x.Id == clienteId).FirstOrDefault();
 
             if (cliente == null)
-                return BadRequest($"Cliente Id: {clienteId} não existe.");
+                return NoContent();
 
-            Result resultado = cliente.Editar(input.Nome);
+            Result resultado = cliente.Editar(input.Nome, input.Sobrenome, input.Email);
             if (resultado.IsFailure)
-                return BadRequest($"Erro ao atualizar Cliente.");
+                return BadRequest();
 
             _context.Clientes.Update(cliente);
             _context.SaveChanges();
 
-            return Ok($"Cliente {cliente.Nome}, Id: {cliente.Id} editado com sucesso.");
+            return NoContent();
         }
 
         [HttpDelete("clienteId")]
@@ -93,12 +86,12 @@ namespace Ecommerce.WebAPI.Controllers
         {
             Cliente cliente = _context.Clientes.Where(x => x.Id == clienteId).FirstOrDefault();
             if (cliente == null)
-                return BadRequest($"Cliente Id: {clienteId} não existe.");
+                return NotFound();
 
             _context.Clientes.Remove(cliente);
             _context.SaveChanges();
 
-            return Ok($"Cliente {cliente.Nome}, Id: {cliente.Id} excluido com sucesso.");
+            return NoContent();
         }
 
         [HttpOptions]

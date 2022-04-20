@@ -3,14 +3,16 @@ using System;
 using Ecommerce.WebAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Ecommerce.WebAPI.Data.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20220419192102_AddClienteCampo")]
+    partial class AddClienteCampo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,9 +89,6 @@ namespace Ecommerce.WebAPI.Data.Migrations
 
                     b.Property<string>("Nome")
                         .HasColumnType("text");
-
-                    b.Property<double>("Preco")
-                        .HasColumnType("double");
 
                     b.HasKey("Id");
 

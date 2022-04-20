@@ -24,9 +24,13 @@ namespace Ecommerce.WebAPI.Queries.Clientes
             string query = $@"
                 SELECT id
                       ,nome
+                      ,sobrenome
+                      ,email
                 FROM clientes
                 WHERE ('{parameters.Id}' = '' OR id LIKE '{parameters.Id}')
                 AND ('{parameters.Nome}' = '' OR nome LIKE '%{parameters.Nome}%')
+                AND ('{parameters.Sobrenome}' = '' OR nome LIKE '%{parameters.Sobrenome}%')
+                AND ('{parameters.Email}' = '' OR nome LIKE '%{parameters.Email}%')
                 ;
             ";
 
@@ -41,6 +45,8 @@ namespace Ecommerce.WebAPI.Queries.Clientes
             string query = $@"
                 SELECT id AS Id
                       ,nome AS Nome
+                      ,sobrenome AS Sobrenome
+                      ,email AS Email
                 FROM clientes
                 WHERE id = @clienteId
                 ;

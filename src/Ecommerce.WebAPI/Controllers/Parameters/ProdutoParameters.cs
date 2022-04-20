@@ -7,12 +7,14 @@ namespace Ecommerce.WebAPI.Controllers.Parameters
         public string Id { get; set; }
         public string Nome { get; set; }
         public string Descricao { get; set; }
+        public string Preco { get; set; }
 
         public override bool HasParameters()
         {
             return !string.IsNullOrEmpty(Id) ||
                    !string.IsNullOrEmpty(Nome) ||
-                   !string.IsNullOrEmpty(Descricao);
+                   !string.IsNullOrEmpty(Descricao) ||
+                   !string.IsNullOrEmpty(Preco);
         }
 
         public override void SetParameters(string value)
@@ -23,6 +25,8 @@ namespace Ecommerce.WebAPI.Controllers.Parameters
                 Nome = value;
             if (string.IsNullOrEmpty(Descricao))
                 Descricao = value;
+            if (string.IsNullOrEmpty(Preco))
+                Preco = value;
         }
     }
 }

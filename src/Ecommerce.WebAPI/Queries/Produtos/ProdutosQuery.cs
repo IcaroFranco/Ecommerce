@@ -25,10 +25,12 @@ namespace Ecommerce.WebAPI.Queries.Produtos
                 SELECT id
                       ,nome
                       ,descricao
+                      ,preco
                 FROM produtos
                 WHERE ('{parameters.Id}' = '' OR id LIKE '{parameters.Id}')
                 AND ('{parameters.Nome}' = '' OR nome LIKE '%{parameters.Nome}%')
                 AND ('{parameters.Descricao}' = '' OR nome LIKE '%{parameters.Descricao}%')
+                AND ('{parameters.Preco}' = '' OR nome LIKE '%{parameters.Preco}%')
                 ;
             ";
 
@@ -43,6 +45,7 @@ namespace Ecommerce.WebAPI.Queries.Produtos
                 SELECT id AS Id
                       ,nome AS Nome
                       ,descricao AS Descricao
+                      ,preco AS Preco
                 FROM produtos
                 WHERE id = @produtoId
                 ;

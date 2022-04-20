@@ -1,11 +1,11 @@
-﻿using Ecommerce.WebAPI._Core.PagedList;
+﻿using CSharpFunctionalExtensions;
+using Ecommerce.WebAPI._Core.PagedList;
 using Ecommerce.WebAPI.Controllers.Parameters;
 using Ecommerce.WebAPI.Data;
 using Ecommerce.WebAPI.Entities;
 using Ecommerce.WebAPI.InputModels;
 using Ecommerce.WebAPI.Queries.Produtos;
 using Ecommerce.WebAPI.Queries.Produtos.ViewModel;
-using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Linq;
@@ -43,7 +43,7 @@ namespace Ecommerce.WebAPI.Controllers
             ProdutoViewModel dto = await _produtosQuery.BuscarProdutosAsync(produtoId);
 
             if (dto == null)
-                return BadRequest($"Produto Id: {produtoId} não existe.");
+                return NotFound();
 
             return Ok(dto);
         }
@@ -51,15 +51,15 @@ namespace Ecommerce.WebAPI.Controllers
         [HttpPost]
         public IActionResult Criar([FromBody] InserirProdutoInputModel input)
         {
-            Result<Produto> produto = Produto.Criar(input.Nome, input.Descricao);
+            Result<Produto> produto = Produto.Criar(input.Nome, input.Descricao, input.Preco);
 
             if(produto.IsFailure)
-                return BadRequest($"Erro ao inserir Cliente, {produto.Error}");
+                return NotFound();
 
             _context.Produtos.Add(produto.Value);
             _context.SaveChanges();
 
-            return Ok($"Produto '{produto.Value.Nome}', Id: {produto.Value.Id} criado com sucesso."); ;
+            return Ok(produto.Value);
         }
 
         [HttpPut("produtoId")]
@@ -68,16 +68,16 @@ namespace Ecommerce.WebAPI.Controllers
             Produto produto = _context.Produtos.Where(x => x.Id == produtoId).FirstOrDefault();
 
             if (produto == null)
-                return BadRequest($"Cliente Id: {produtoId} não existe.");
+                return NotFound();
 
-            Result resultado = produto.Editar(input.Nome, input.Descricao);
+            Result resultado = produto.Editar(input.Nome, input.Descricao, input.Preco);
             if (resultado.IsFailure)
-                return BadRequest($"Erro ao atualizar Cliente.");
+                return BadRequest();
 
             _context.Produtos.Update(produto);
             _context.SaveChanges();
 
-            return Ok($"Produto {produto.Nome}, Id: {produto.Id} editado com sucesso."); ;
+            return NoContent();
         }
 
         [HttpDelete("produtoId")]
@@ -85,12 +85,12 @@ namespace Ecommerce.WebAPI.Controllers
         {
             Produto produto = _context.Produtos.Where(x => x.Id == produtoId).FirstOrDefault();
             if (produto == null)
-                return BadRequest($"Produto Id: {produtoId} não existe.");
+                return NotFound();
 
             _context.Produtos.Remove(produto);
             _context.SaveChanges();
 
-            return Ok($"Produto '{produto.Nome}', Id: {produtoId} excluido com sucesso.");
+            return NoContent();
         }
 
         [HttpOptions]

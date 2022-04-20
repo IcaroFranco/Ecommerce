@@ -6,12 +6,13 @@ namespace Ecommerce.WebAPI._Core.PagedList
     {
         private readonly int pageNumberDefault = 1;
         private readonly int pageSizeDefault = 25;
+        private const int maxPageSize = 50;
         private readonly string[] prevent = new string[] { "from", "column", "database", "delete", "update" };
 
         public Pagination(RequestParameters parameters)
         {
             PageNumber = parameters.PageNumber < pageNumberDefault ? pageNumberDefault : parameters.PageNumber;
-            PageSize = parameters.PageSize < pageSizeDefault ? pageSizeDefault : parameters.PageSize;
+            PageSize = parameters.PageSize == 0 || parameters.PageSize > maxPageSize ? pageSizeDefault : parameters.PageSize;
             OrderBy = prevent.Contains(parameters.OrderBy?.ToLower()) ? string.Empty : parameters.OrderBy;
         }
 
